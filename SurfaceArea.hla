@@ -1,0 +1,93 @@
+//Ivan Clyde Villacrusis
+//1230
+//7.27.2023
+//Input 3 numbers: r, h, s to find out the surface areas of sphere, cylinder and cone.
+
+
+program SA;
+#include( "stdlib.hhf" );
+static
+	r : real32;
+	h : real32;
+	s : real32;
+	tempr : real32;
+	temph : real32;
+	temps : real32;	
+	finalSAResult : real32;
+	finalCylinderResult : real32;
+	finalConeResult : real32;
+	
+begin SA;
+
+stdout.put("What's your value of r: ");
+stdin.get(r);
+stdout.put("What's your value of h: ");
+stdin.get(h);
+stdout.put("What's your value of s: ");
+stdin.get(s);
+
+mov(r,EAX);
+mov(EAX, tempr);
+finit();
+
+fld(tempr);
+fld(st0);
+fmulp(); //multiplied r^2
+fldPI();
+fmulp(); //multiplied pi and r^2
+fld(4.0);
+fmulp(); //multiplied 4pir^2
+fstp(finalSAResult);
+
+stdout.put("Your sphere has surface area = ");
+stdout.putr32(finalSAResult, 20, 4);
+
+mov(r, eax);
+mov(eax, tempr);
+mov(h, ebx);
+mov(ebx, temph);
+
+fld(tempr);
+fld(st0);
+fmulp();
+fldPI();
+fmulp();
+fld(2.0);
+fmulp(); //at this point i calculated 2pir^2
+fld(tempr);
+fld(temph);
+fmulp();
+fldPI();
+fmulp();
+fld(2.0);
+fmulp();
+fadd(); //computed all of it: 2pir^2 + 2pirh
+fstp(finalCylinderResult);
+
+stdout.newln();
+stdout.put("Your cylinder has surface area = ");
+stdout.putr32(finalCylinderResult, 12, 4);
+
+mov(r, eax);
+mov(eax, tempr);
+mov(s, ebx);
+mov(ebx, temps);
+
+fld(tempr);
+fld(st0);
+fmulp();
+fldPI();
+fmulp(); //at this point i calculated pir^2
+fld(tempr);
+fld(temps);
+fmulp();
+fldPI();
+fmulp();
+fadd(); //computed all of it: r^2 + pirS
+fstp(finalConeResult);
+
+stdout.newln();
+stdout.put("Your cone has surface area = ");
+stdout.putr32(finalConeResult, 12, 4);
+
+end SA;

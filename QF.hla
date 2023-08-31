@@ -1,0 +1,88 @@
+//Ivan Clyde Villacrusis
+//1230
+//7.27.2023
+//Input 3 floating values: a, b, c to calculate quadratic formula
+
+program QF;
+#include( "stdlib.hhf" );
+static
+	a : real32;
+	b : real32;
+	c : real32;
+	tempa : real32;
+	tempb : real32;
+	tempc : real32;
+	solutionPositive : real32;
+	solutionNegative : real32;
+begin QF;
+
+stdout.put("Gimme a value for a: ");
+stdin.get(a);
+stdout.put("Gimme a value for b: ");
+stdin.get(b);
+stdout.put("Gimme a value for c: ");
+stdin.get(c);
+
+mov(a, EAX);
+mov(EAX, tempa);
+mov(b, EBX);
+mov(EBX, tempb);
+mov(c, ECX);
+mov(ECX, tempc);
+
+finit();
+fld(tempb);
+fld(st0);
+fmulp(); //b^2
+fld(tempa);
+fld(tempc);
+fmulp(); //ac
+fld(4.0);
+fmulp(); //4ac
+fsub(); //b^2 - 4ac
+fsqrt(); //calculates the discrimant part
+fld(tempb);
+fchs(); //negates b value
+fsub(); // -b - sqrt(b^2 - 4ac)
+fld(tempa);
+fld(2.0);
+fmulp(); // divide by 2a
+fdiv(); 
+fchs();
+fstp(solutionNegative);	
+
+fld(tempb);
+fld(st0);
+fmulp(); //b^2
+fld(tempa);
+fld(tempc);
+fmulp(); //ac
+fld(4.0);
+fmulp(); //4ac
+fsub(); //b^2 - 4ac
+fsqrt(); //calculates the discrimant part
+fld(tempb);
+fchs(); //negates b value
+fadd(); // -b + sqrt(b^2 - 4ac)
+fld(tempa);
+fld(2.0);
+fmulp(); 
+fdiv(); // divide by 2a
+fstp(solutionPositive);	
+stdout.put("The solutions are x = ");
+stdout.putr32(solutionNegative, 8, 2);
+stdout.put(" and x = ");
+stdout.putr32(solutionPositive, 8, 2);
+
+
+
+
+
+
+
+
+
+
+
+
+end QF;

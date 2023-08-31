@@ -1,0 +1,90 @@
+//Ivan Clyde Villacrusis
+//1230
+//8.8.2023
+//input a string and outputs its length
+program stringProgram;
+#include("stdlib.hhf");
+#include("cs17string.hla");
+
+static
+
+iSize: int8 := 0;
+dStringAddress: byte[10000];
+arrayStringAddress: dword := 0;
+stringDataLength : uns16 := 10000;
+
+procedure strlen( baseStringAddress: dword ); @nodisplay; @noframe; 
+
+static
+
+returnAddress: dword;
+base: dword;
+iRegisterValue1 : dword; //preserve EBX
+iRegisterValue2 : dword; //preserve ECX
+
+begin strlen;
+
+mov(EBX, iRegisterValue1);
+pop(returnAddress);
+pop(baseStringAddress);
+mov(baseStringAddress, ebx);
+
+push(returnAddress);
+
+push(iRegisterValue1);
+push(iRegisterValue2);
+
+mov($0, ch); //store null byte into 16 bit register 
+mov(0, al);
+
+//do-sub-task
+
+length_count:
+loop_termination:
+cmp([ebx], ch); //compares the address of each letter in the string and if it's null, while loop done.
+je done;
+
+inc(al);
+inc(ebx); // i++
+jmp loop_termination;
+
+done:
+pop(EBX);
+pop(ECX);
+ret();
+end strlen;
+
+begin stringProgram;
+
+stdout.put("Feed me: ");
+mov(&dStringAddress, EAX);
+push(EAX);
+push(stringDataLength);
+call gets;
+
+//make enough storage for the string array
+
+mov(@size(int8), AL);
+mov(iSize, BL);
+inc(BL);
+mul(BL);
+mov(0, EBX);
+mov(AX, BX);
+malloc(EBX);
+
+mov(EAX, arrayStringAddress);
+stdout.put("The string you entered: ");
+mov(&dStringAddress, EAX);
+push(EAX);
+call puts;
+stdout.put(" Has length = ");
+
+mov(&dStringAddress, EAX);
+push(EAX);
+call strlen;
+
+stdout.puti8(al);
+
+//free the string's array size
+free(arrayStringAddress);
+end stringProgram;

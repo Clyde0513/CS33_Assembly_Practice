@@ -1,0 +1,140 @@
+//Ivan Clyde Villacrusis
+//1230
+//8.7.2023
+//input 3 integers and output the largest of them and make sure that the largest replaces all of the numbers
+
+
+
+program largest;
+#include("stdlib.hhf");
+
+static
+
+firstValue : int32;
+secondValue : int32;
+thirdValue : int32;
+pValue : dword;
+
+procedure biggest( var x : int16; var y : int16; var z : int16 ); @nodisplay; @noframe; 
+
+static
+
+returnAddress : dword;
+dEDXRegister : dword := 0; // preserve EDX
+dECXRegister : dword := 0; // preserve ECX
+dEBXRegister : dword := 0; // preserve EBX
+dEDIRegister : dword := 0; // preserve EDI
+dEBPRegister : dword := 0; // preserve EBP
+dESIRegister : dword := 0; // preserve ESI
+
+begin biggest;
+
+mov(EBX, dEBXRegister);
+mov(ECX, dECXRegister);
+mov(EDX, dEDXRegister);
+mov(EDI, dEDIRegister);
+mov(EBP, dEBPRegister);
+mov(ESI, dESIRegister);
+pop(returnAddress); // This is the return address
+
+
+pop(EBX);  //this is the address of z
+pop(ECX);  //this is the address of y
+pop(EDX);  //this is the address of x
+
+
+// push back the return address
+push(returnAddress);
+push(dEDXRegister);
+push(dECXRegister);
+push(dEBXRegister);
+push(dEDIRegister);
+push(dEBPRegister);
+push(dESIRegister);
+
+//begin sub-task
+
+mov([EBX] , SI); // SI = z
+mov([ECX] , DI); // DI = y
+mov([EDX] , BP); // BP = x
+
+//perform sub-sub-tasks
+// x = BP, y = DI, z = SI
+
+cmp(bp, di); //x > y
+jg firstIf;
+jmp lastElse;
+
+firstIf:
+cmp(bp,si); //x > z
+jg AisBigger;
+jmp ifCisBigger;
+
+ifCisBigger:
+cmp(si,bp); //z > x
+jg CisBigger;
+jmp AisBigger;
+
+CisBigger:
+//result = z
+mov(si, [ECX]); //y = z
+mov(si, [EDX]); //x = z
+jmp endCall;
+
+AisBigger:
+//result = x
+mov(BP, [EBX]); //z = x
+mov(BP, [ECX]); //y = x
+jmp endCall;
+
+lastElse:
+cmp(di,si); //y > z
+jg bisBiggerThanC;
+jmp CisBiggerThanB;
+
+bisBiggerThanC:
+//result = y
+mov(DI, [EDX]); //x = y
+mov(DI, [EBX]); //z = y
+jmp endCall;
+
+CisBiggerThanB:
+cmp(si,di); //z > y
+jg CisGreater;
+jmp bisBiggerThanC;
+
+CisGreater:
+// result = z
+mov(si, [ECX]); //y = z
+mov(si, [EDX]); //x = z
+
+endCall:
+pop( EBX );
+pop( ECX );
+pop( EDX );
+pop( EDI );
+pop( EBP );
+pop( ESI );
+ret();
+end biggest;
+
+
+begin largest;
+
+stdout.put("Gimme X: ");
+stdin.get(firstValue);
+stdout.put("Gimme Y: ");
+stdin.get(secondValue);
+stdout.put("Gimme Z: ");
+stdin.get(thirdValue);
+
+lea(EAX, firstValue);
+push(EAX);
+lea(EAX, secondValue);
+push(EAX);
+lea(EAX, thirdValue);
+push(EAX);
+call biggest;
+stdout.put("After biggest, X = ", firstValue, " Y = ", secondValue, " Z = ", thirdValue, nl);
+
+end largest;
