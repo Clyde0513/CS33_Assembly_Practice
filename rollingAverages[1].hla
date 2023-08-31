@@ -1,0 +1,74 @@
+//Ivan Clyde Villacrusis
+//1230
+//7.30.2023
+//Input numeric floating numbers in a loop and calculate their averages
+
+program RollingAveges;
+#include( "stdlib.hhf" );
+static
+
+input: real32 := 0;
+totalAverage: real32 := 0;
+average: real32 := 0;
+average_done: real32 := 0;
+choice: byte;
+choice_y: byte := $79; //y
+choice_n: byte := $6E; //n
+rounds: real32 := 1.0;
+
+begin RollingAveges;
+
+
+
+whileLoopStart:
+whileLoopTermination:
+mov(choice_y, al);
+cmp(al, 'y');
+jne endWhileLoop;
+whileLoopBody:
+stdout.put("enter data point: ");
+stdin.get(input);
+
+finit();
+fld(average);
+fld(input);
+fadd(); //average + input
+fstp(average); //puts average in a float variable
+
+fld(average); 
+fld(rounds);
+fdiv(); //average / rounds
+fstp(totalAverage);
+
+//increment rounds by 1
+fld(1.0);
+fld(rounds);	
+fadd();
+fstp(rounds);
+
+stdout.put("rolling average = ");
+stdout.putr32(totalAverage, 10, 3);
+stdout.newln();
+
+choices:
+stdout.put("more data? ");
+stdin.flushInput();
+stdin.getc();
+mov(AL, choice);
+cmp(choice, 'n');
+je endWhileLoop;
+cmp(choice, 'y');
+je whileLoopStart;
+jmp tryAgain;
+
+endWhileLoop:
+stdout.put("final rolling average = ");
+stdout.putr32(totalAverage,10,3);
+jmp endEverything;
+
+tryAgain:
+stdout.put("invalid input, try again", nl);
+jmp choices;
+
+endEverything:
+end RollingAveges;

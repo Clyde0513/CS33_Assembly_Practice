@@ -1,0 +1,146 @@
+//Ivan Clyde Villacrusis
+//1230
+//7.30.2023
+//Input a floating number of 32bit that determines the size of the waist 
+//and outputs it in 'S', 'M', 'L', or 'X'
+
+
+program PS;
+#include( "stdlib.hhf" );
+static
+
+	value1: real32;
+	value2: real32;
+	cMyChar: byte := 0;
+	
+
+procedure pantsize( waist : real32 ); @nodisplay; @noframe;
+
+static
+
+	returnAddress: dword;
+	temp1: real32 := 29.9;
+	temp2: real32 := 32;
+	temp3: real32 := 35;
+	temp4: real32 := 36;
+	iRegisterValue1 : dword;
+	iRegisterValue2 : dword;
+	
+begin pantsize;
+
+//acquire values
+
+mov(EBX, iRegisterValue1);
+mov(EAX, iRegisterValue2);
+pop(returnAddress);
+pop(waist);
+push(returnAddress);
+
+//preserve registers -- EBX and EAX
+push(iRegisterValue1);
+push(iRegisterValue2);
+
+//do subtask	
+finit();
+fld(temp1);
+fld(waist);  //let's say 28.7 
+fcomp(); //is 28.7 < 29.9?
+fstsw(ax);
+sahf();
+setb(al);
+cmp(al , 1);
+je S;
+jmp M; //is 30.12 > 30
+
+S:
+mov(0, AX);
+mov('S', BL);
+mov(BL, AL);
+push(AX); //AX has now 'S'
+mov(AL, cMyChar);
+jmp endPantSize;
+
+M:
+fld(temp2); //32
+fld(waist); //30.12
+fcomp(); //is 30.12 < 32?
+fstsw(ax);
+sahf();
+setb(al);
+cmp(al, 1);
+je Medium;
+jmp L;
+
+Medium:
+mov(0, ax);
+mov('M', BL);
+mov(BL, AL);
+push(AX); //AX has now 'M');
+mov(AL, cMyChar);
+jmp endPantSize;
+
+L:
+fld(temp3); //35
+fld(waist); //33.67
+fcomp(); //is 33.67 < 35?
+fstsw(ax);
+sahf();
+setb(al);
+cmp(al, 1);
+je Large;
+jmp X;
+
+Large:
+mov(0, ax);
+mov('L', BL);
+mov(BL, AL);
+push(AX); //AX has now 'L');
+mov(AL, cMyChar);
+jmp endPantSize;
+
+X:
+fld(waist); //40
+fld(temp4); //36
+fcomp(); //is 36 < 40?
+fstsw(ax);
+sahf();
+setb(al);
+cmp(al, 1);
+je ExtraLarge;
+
+
+ExtraLarge:
+mov(0, ax);
+mov('X', BL);
+mov(BL, AL);
+push(AX); //AL has now 'X');
+mov(AL, cMyChar);
+jmp endPantSize;
+
+
+endPantSize:
+pop(AX);
+pop(EBX);
+pop(EAX);
+ret();
+end pantsize;
+
+begin PS;
+
+stdout.put("gimme your waist: ");
+stdin.get(value1);
+mov(0, EBX);
+mov(value1, EBX);
+push(EBX);
+
+stdout.put("calling pantsize", nl);
+
+call pantsize;
+
+stdout.put("pantsize returning in AL: ");
+stdout.putc(cMyChar);
+jmp endProg;
+
+
+endProg:
+end PS;
